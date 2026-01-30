@@ -1,10 +1,10 @@
 {
   "name": "bluestarai-leadgen",
   "private": true,
-  "version": "3.9.5",
+  "version": "1.0.0",
   "type": "module",
   "description": "AI-Powered Lead Management Platform",
-  "author": "BluestarAI World Inc.",
+  "author": "Bluestarai World Inc.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",

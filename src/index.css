@@ -1,8 +1,3 @@
-/* ============================================
-   BluestarAI Brand Typography - Self-hosted Fonts
-   ============================================ */
-
-/* Montserrat Font Family (Body Text) */
 @font-face {
   font-family: 'Montserrat';
   src: url('/fonts/Montserrat-Light.ttf') format('truetype');
@@ -51,7 +46,6 @@
   font-display: swap;
 }
 
-/* Raleway Font Family (Headlines) */
 @font-face {
   font-family: 'Raleway';
   src: url('/fonts/Raleway-Regular.ttf') format('truetype');
@@ -96,8 +90,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================
-   BluestarAI Brand Guidelines CSS
+/* 
+   Bluestarai Brand Guidelines CSS
    Primary Colors:
    - Space Blue: #3148B9
    - Orange: #F24C03
@@ -109,7 +103,7 @@
    Typography:
    - Headlines: Raleway SemiBold/Medium
    - Body: Montserrat
-   ============================================ */
+   */
 
 @layer base {
   * {
@@ -121,7 +115,6 @@
   }
   
   body {
-    /* BluestarAI: Blue Black background with white text */
     background-color: #020409;
     color: #FFFFFF;
     font-family: 'Montserrat', system-ui, sans-serif;
@@ -129,7 +122,6 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Headlines use Raleway per brand guidelines */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Raleway', system-ui, sans-serif;
   }
@@ -159,7 +151,6 @@
 }
 
 @layer components {
-  /* Primary Button - Uses brand gradient */
   .btn-primary {
     @apply px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 cursor-pointer;
     background: linear-gradient(135deg, #3148B9, #F24C03);
@@ -197,7 +188,6 @@
     background-color: rgba(255, 255, 255, 0.08);
   }
   
-  /* Ghost Button */
   .btn-ghost {
     @apply px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer;
     color: rgba(255, 255, 255, 0.7);
@@ -209,7 +199,6 @@
     transform: translateY(-1px);
   }
   
-  /* Icon Button */
   .btn-icon {
     @apply p-2 rounded-lg transition-all duration-200 cursor-pointer;
     color: rgba(255, 255, 255, 0.4);

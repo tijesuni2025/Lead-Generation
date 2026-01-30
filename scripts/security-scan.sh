@@ -1,8 +1,4 @@
 #!/bin/bash
-# ============================================================================
-# Bluestarai LeadGen Pro - Security Scanning Script
-# Comprehensive security checks for CI/CD pipeline
-# ============================================================================
 
 set -euo pipefail
 
@@ -43,15 +39,11 @@ record_result() {
 }
 
 echo ""
-echo "============================================"
 echo "  Bluestarai LeadGen Security Scan"
 echo "  Started: $(date)"
-echo "============================================"
 echo ""
 
-# -----------------------------------------------------------------------------
-# 1. NPM AUDIT - Check for vulnerable dependencies
-# -----------------------------------------------------------------------------
+# NPM AUDIT
 log_info "Running npm audit..."
 
 cd "$PROJECT_ROOT"
@@ -73,9 +65,7 @@ else
     fi
 fi
 
-# -----------------------------------------------------------------------------
-# 2. SECRET SCANNING - Check for exposed secrets
-# -----------------------------------------------------------------------------
+# SECRET SCANNING
 log_info "Scanning for exposed secrets..."
 
 SECRETS_FOUND=0
@@ -107,21 +97,17 @@ else
     record_result "pass"
 fi
 
-# -----------------------------------------------------------------------------
-# 3. DEPENDENCY LICENSE CHECK
-# -----------------------------------------------------------------------------
+# DEPENDENCY LICENSE CHECK
 log_info "Checking dependency licenses..."
 
 BANNED_LICENSES=("GPL-3.0" "AGPL-3.0" "SSPL" "BUSL")
 LICENSE_ISSUES=0
 
-# Check package.json for license field
 if [ -f "$PROJECT_ROOT/package.json" ]; then
     PROJECT_LICENSE=$(grep -o '"license":\s*"[^"]*"' "$PROJECT_ROOT/package.json" | cut -d'"' -f4 || echo "unknown")
     log_info "Project license: $PROJECT_LICENSE"
 fi
 
-# Simple license check (would need license-checker for comprehensive scan)
 for license in "${BANNED_LICENSES[@]}"; do
     if grep -r "$license" "$PROJECT_ROOT/node_modules/"*/package.json 2>/dev/null | head -5 > /dev/null; then
         log_warning "Found potentially incompatible license: $license"
@@ -137,9 +123,7 @@ else
     record_result "pass"
 fi
 
-# -----------------------------------------------------------------------------
-# 4. ENVIRONMENT FILE CHECK
-# -----------------------------------------------------------------------------
+# ENVIRONMENT FILE CHECK
 log_info "Checking environment files..."
 
 ENV_ISSUES=0
@@ -166,9 +150,7 @@ else
     record_result "pass"
 fi
 
-# -----------------------------------------------------------------------------
-# 5. SECURITY HEADERS CHECK (for Nginx config)
-# -----------------------------------------------------------------------------
+# SECURITY HEADERS CHECK (for Nginx config)
 log_info "Checking security headers configuration..."
 
 HEADERS_MISSING=0
@@ -200,9 +182,7 @@ else
     record_result "pass"
 fi
 
-# -----------------------------------------------------------------------------
-# 6. CODE QUALITY - Basic checks
-# -----------------------------------------------------------------------------
+# CODE QUALITY 
 log_info "Running code quality checks..."
 
 # Check for console.log statements
@@ -223,9 +203,7 @@ if [ "$TODOS" -gt 0 ]; then
     log_info "Found $TODOS TODO/FIXME comments"
 fi
 
-# -----------------------------------------------------------------------------
-# 7. BUILD INTEGRITY CHECK
-# -----------------------------------------------------------------------------
+# BUILD INTEGRITY CHECK
 log_info "Checking build configuration..."
 
 if [ -f "$PROJECT_ROOT/vite.config.js" ]; then
@@ -242,13 +220,8 @@ else
     record_result "pass"
 fi
 
-# -----------------------------------------------------------------------------
-# SUMMARY
-# -----------------------------------------------------------------------------
 echo ""
-echo "============================================"
 echo "  Security Scan Summary"
-echo "============================================"
 echo ""
 echo "  Total Checks:  $TOTAL_CHECKS"
 echo -e "  ${GREEN}Passed:${NC}        $PASSED_CHECKS"
@@ -258,8 +231,6 @@ echo ""
 echo "  Reports saved to: $REPORT_DIR"
 echo "============================================"
 echo ""
-
-# Exit with error if any critical failures
 if [ "$FAILED_CHECKS" -gt 0 ]; then
     log_error "Security scan found critical issues"
     exit 1

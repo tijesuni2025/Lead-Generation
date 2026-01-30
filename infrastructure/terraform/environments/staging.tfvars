@@ -1,7 +1,3 @@
-# ============================================================================
-# Staging Environment Configuration
-# ============================================================================
-
 environment        = "staging"
 project_name       = "bluestaraileadgen"
 aws_region         = "us-east-2"

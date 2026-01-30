@@ -1,7 +1,3 @@
-# ============================================================================
-# Bluestarai LeadGen Pro - Terraform Variables
-# ============================================================================
-
 variable "project_name" {
   description = "Name of the project (used for resource naming)"
   type        = string
@@ -23,19 +19,11 @@ variable "aws_region" {
   default     = "us-east-2"
 }
 
-# =============================================================================
-# S3 CONFIGURATION
-# =============================================================================
-
 variable "enable_s3_website" {
   description = "Enable S3 static website hosting (disable when using CloudFront)"
   type        = bool
   default     = true
 }
-
-# =============================================================================
-# CLOUDFRONT CONFIGURATION
-# =============================================================================
 
 variable "enable_cloudfront" {
   description = "Enable CloudFront CDN distribution"
@@ -63,10 +51,6 @@ variable "domain_name" {
   default     = ""
 }
 
-# =============================================================================
-# BACKUP CONFIGURATION
-# =============================================================================
-
 variable "enable_backups" {
   description = "Enable backup bucket for deployment rollbacks"
   type        = bool
@@ -78,10 +62,6 @@ variable "backup_retention_days" {
   type        = number
   default     = 30
 }
-
-# =============================================================================
-# MONITORING CONFIGURATION
-# =============================================================================
 
 variable "enable_monitoring" {
   description = "Enable CloudWatch monitoring and alarms"

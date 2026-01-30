@@ -1,8 +1,4 @@
 #!/bin/bash
-# ============================================================================
-# Bluestarai LeadGen Pro - Deployment Script
-# Usage: ./scripts/deploy.sh [environment] [options]
-# ============================================================================
 
 set -euo pipefail
 
@@ -128,7 +124,6 @@ run_build() {
     npm ci
     npm run build
     
-    # Generate build info
     cat > dist/build-info.json << EOF
 {
     "version": "$VITE_APP_VERSION",
@@ -153,7 +148,6 @@ backup_current_deployment() {
     BACKUP_BUCKET="${BUCKETS[$ENVIRONMENT]}-backups"
     TIMESTAMP=$(date +%Y%m%d-%H%M%S)
     
-    # Check if backup bucket exists
     if aws s3 ls "s3://$BACKUP_BUCKET" 2>&1 | grep -q 'NoSuchBucket'; then
         log_warning "Backup bucket doesn't exist, skipping backup"
         return
@@ -310,7 +304,7 @@ confirm_production() {
     fi
     
     echo ""
-    log_warning "⚠️  You are about to deploy to PRODUCTION ⚠️"
+    log_warning "You are about to deploy to PRODUCTION"
     echo ""
     read -p "Type 'production' to confirm: " CONFIRM
     
@@ -375,13 +369,10 @@ main() {
     fi
     
     echo ""
-    echo "======================================"
     echo "  Bluestarai LeadGen Pro Deployment"
-    echo "======================================"
     echo "  Environment: $ENVIRONMENT"
     echo "  Bucket: ${BUCKETS[$ENVIRONMENT]}"
     echo "  Dry Run: $DRY_RUN"
-    echo "======================================"
     echo ""
     
     # Check prerequisites
@@ -393,11 +384,8 @@ main() {
         rollback
         exit 0
     fi
-    
-    # Confirm production deployment
     confirm_production
     
-    # Run deployment steps
     cd "$PROJECT_ROOT"
     run_tests
     run_build
@@ -407,7 +395,7 @@ main() {
     run_health_check
     
     echo ""
-    log_success "🚀 Deployment to $ENVIRONMENT completed successfully!"
+    log_success "Deployment to $ENVIRONMENT completed successfully!"
     echo ""
 }
 

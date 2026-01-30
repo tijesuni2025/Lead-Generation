@@ -1,6 +1,3 @@
-# ============================================================================
-# Production Environment Configuration
-# ============================================================================
 
 environment        = "production"
 project_name       = "bluestaraileadgen"

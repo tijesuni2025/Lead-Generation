@@ -15,12 +15,9 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { integrationConfig, INTEGRATIONS, generateEnvTemplate } from './services/integrationConfig';
 import { integrationService } from './services/integrationClients';
 
-// ============================================================================
-// DESIGN TOKENS - BluestarAI Brand Design System
-// ============================================================================
+// DESIGN TOKENS
 const tokens = {
   colors: {
-    // Brand Neutrals - Based on BluestarAI Dark Blue palette
     gray: {
       950: '#020409',  // Blue Black
       900: '#0B1828',  // Dark Blue (primary background)
@@ -35,7 +32,6 @@ const tokens = {
       100: '#dce8f5',  // Very light
       50: '#f0f5fa',   // Near white
     },
-    // Primary - BluestarAI Space Blue
     primary: {
       DEFAULT: '#3148B9',  // Space Blue
       50: 'rgba(49, 72, 185, 0.06)',
@@ -45,18 +41,17 @@ const tokens = {
       active: '#233693',
       light: '#4a5fd4',
     },
-    // Accent - BluestarAI Orange
     accent: {
       DEFAULT: '#F24C03',  // Brand Orange
       muted: 'rgba(242, 76, 3, 0.12)',
       light: '#ff6b2c',
       dark: '#d94200',
     },
-    // Semantic - Brand-aligned
+    // Semantic
     success: { DEFAULT: '#10b981', muted: 'rgba(16, 185, 129, 0.12)' },
     warning: { DEFAULT: '#F24C03', muted: 'rgba(242, 76, 3, 0.12)' },  // Use brand orange
     error: { DEFAULT: '#ef4444', muted: 'rgba(239, 68, 68, 0.12)' },
-    // Status-specific - Brand aligned
+    // Status-specific
     hot: { bg: 'rgba(242, 76, 3, 0.1)', text: '#F24C03', border: 'rgba(242, 76, 3, 0.3)' },  // Orange for hot
     warm: { bg: 'rgba(251, 191, 36, 0.08)', text: '#fbbf24', border: 'rgba(251, 191, 36, 0.2)' },
     cold: { bg: 'rgba(49, 72, 185, 0.1)', text: '#6b8cdc', border: 'rgba(49, 72, 185, 0.3)' },  // Space Blue for cold
@@ -83,7 +78,6 @@ const tokens = {
   },
   transition: { fast: '120ms ease', base: '200ms ease', slow: '300ms ease-out' },
   font: {
-    // BluestarAI Brand Typography
     heading: '"Raleway", -apple-system, BlinkMacSystemFont, sans-serif',
     body: '"Montserrat", -apple-system, BlinkMacSystemFont, sans-serif',
     sans: '"Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -96,10 +90,8 @@ const c = tokens.colors;
 const sp = tokens.spacing;
 const r = tokens.radius;
 
-// ============================================================================
 // CONFIG & MOCK DATA
-// ============================================================================
-const CONFIG = { appName: 'LeadGen Pro', company: 'BluestarAI', version: '3.9.5' };
+const CONFIG = { appName: 'LeadGen Pro', company: 'Bluestarai', version: '1.0.0' };
 
 const MOCK_USERS = {
   admin: { id: 'admin-1', email: 'admin@bluestarai.world', password: 'admin123', role: 'admin', name: 'Victor Oluwagbemiga' },
@@ -140,15 +132,8 @@ const MOCK_LEADS_BY_CLIENT = {
   'client-3': generateMockLeads('client-3'),
 };
 
-// ============================================================================
-// CONTEXT
-// ============================================================================
 const AuthContext = createContext(null);
 const useAuth = () => useContext(AuthContext);
-
-// ============================================================================
-// CACHING LAYER - In-memory cache with TTL
-// ============================================================================
 const createCache = () => {
   const cache = new Map();
   const TTL = 5 * 60 * 1000; // 5 minutes default
@@ -179,9 +164,6 @@ const createCache = () => {
 
 const appCache = createCache();
 
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
 const fmt = {
   currency: (v) => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v}`,
   date: (d) => {
@@ -224,11 +206,6 @@ const fuzzySearch = (query, items, keys = ['name']) => {
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
-// ============================================================================
-// BASE COMPONENTS
-// ============================================================================
-
-// Avatar - BluestarAI branded gradients
 const Avatar = ({ name, size = 40, src }) => {
   // Brand-aligned avatar gradients
   const gradients = [
@@ -254,7 +231,6 @@ const Avatar = ({ name, size = 40, src }) => {
   );
 };
 
-// UserOrgAvatar - Stacked user with org badge
 const UserOrgAvatar = ({ userName, orgName, userSize = 40, showOrg = true }) => {
   const orgSize = userSize * 0.65;
   
@@ -301,7 +277,7 @@ const ModalOverlay = ({ children, onClose, maxWidth = 500 }) => (
   </div>
 );
 
-// File Upload Modal - Proper z-index file picker
+// Proper z-index file picker
 const FileUploadModal = ({ isOpen, onClose, onUpload, acceptedTypes = '.csv,.xlsx,.json' }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -462,7 +438,7 @@ const FileUploadModal = ({ isOpen, onClose, onUpload, acceptedTypes = '.csv,.xls
   );
 };
 
-// Client Metrics Modal - Shows detailed metrics when clicking client card
+// Shows detailed metrics when clicking client card
 const ClientMetricsModal = ({ isOpen, onClose, client, leads }) => {
   if (!isOpen || !client) return null;
   
@@ -555,7 +531,6 @@ const ClientMetricsModal = ({ isOpen, onClose, client, leads }) => {
   );
 };
 
-// Badge - Minimal status indicator
 const StatusBadge = ({ status }) => {
   const config = c[status.toLowerCase()] || c.new;
   const icons = { hot: Flame, warm: Sparkles, cold: Snowflake, new: Zap };
@@ -574,7 +549,7 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-// Score - Elegant progress indicator
+// Progress indicator
 const Score = ({ value, size = 'md' }) => {
   const color = value >= 75 ? c.success.DEFAULT : value >= 50 ? c.warning.DEFAULT : value >= 25 ? '#f97316' : c.error.DEFAULT;
   const widths = { sm: 40, md: 52, lg: 64 };
@@ -589,7 +564,6 @@ const Score = ({ value, size = 'md' }) => {
   );
 };
 
-// Button - BluestarAI branded with gradient option
 const Button = ({ children, variant = 'primary', size = 'md', icon: Icon, iconRight, loading, disabled, fullWidth, onClick, style = {} }) => {
   const [hovered, setHovered] = useState(false);
   
@@ -647,7 +621,6 @@ const Button = ({ children, variant = 'primary', size = 'md', icon: Icon, iconRi
   );
 };
 
-// Input - Clean, focused with brand colors
 const Input = ({ label, icon: Icon, error, ...props }) => {
   const [focused, setFocused] = useState(false);
   
@@ -675,7 +648,6 @@ const Input = ({ label, icon: Icon, error, ...props }) => {
   );
 };
 
-// Card - Premium container with subtle brand styling
 const Card = ({ children, padding = 20, hover = false, onClick, accent = false, gradient = false, style = {} }) => {
   const [hovered, setHovered] = useState(false);
   
@@ -711,7 +683,6 @@ const Card = ({ children, padding = 20, hover = false, onClick, accent = false, 
   );
 };
 
-// Metric Card - Dashboard stat display with brand styling
 const Metric = ({ label, value, change, trend, icon: Icon, iconColor, accent = false }) => (
   <Card hover gradient>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -739,11 +710,6 @@ const Metric = ({ label, value, change, trend, icon: Icon, iconColor, accent = f
   </Card>
 );
 
-// ============================================================================
-// LAYOUT COMPONENTS
-// ============================================================================
-
-// Sidebar - BluestarAI branded navigation
 const Sidebar = ({ user, currentPage, setCurrentPage, onLogout, isOpen, onClose }) => {
   const isAdmin = user.role === 'admin';
   
@@ -833,7 +799,7 @@ const Sidebar = ({ user, currentPage, setCurrentPage, onLogout, isOpen, onClose 
           </div>
         </nav>
         
-        {/* User - Stacked avatar with org */}
+        {/* Stacked avatar with org */}
         <div style={{ padding: 12, borderTop: `1px solid ${c.gray[800]}`, position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: c.gray[850], borderRadius: r.lg, border: `1px solid ${c.gray[800]}` }}>
             <UserOrgAvatar userName={user.name} orgName={user.company} userSize={34} />
@@ -853,7 +819,6 @@ const Sidebar = ({ user, currentPage, setCurrentPage, onLogout, isOpen, onClose 
   );
 };
 
-// Header - BluestarAI branded header
 const Header = ({ title, user, onMenuClick, onNavigate, onSelectLead }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -941,9 +906,6 @@ const Header = ({ title, user, onMenuClick, onNavigate, onSelectLead }) => {
   );
 };
 
-// ============================================================================
-// LOGIN PAGE
-// ============================================================================
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -1038,9 +1000,6 @@ const LoginPage = ({ onLogin }) => {
   );
 };
 
-// ============================================================================
-// DASHBOARD
-// ============================================================================
 const Dashboard = ({ user }) => {
   const isAdmin = user.role === 'admin';
   const leads = isAdmin ? [] : (MOCK_LEADS_BY_CLIENT[user.id] || []);
@@ -1102,9 +1061,9 @@ const Dashboard = ({ user }) => {
   // Client Dashboard
   const greeting = new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening';
   
-  // Calculate dynamic trends (simulated month-over-month change)
+  // month-over-month change
   const lastMonthStats = useMemo(() => ({
-    total: Math.round(stats.total * 0.969), // Creates ~3.1% growth
+    total: Math.round(stats.total * 0.969),
     value: Math.round(stats.value * 0.969),
     avgScore: Math.round(stats.avgScore * 0.969),
     hot: Math.round(stats.hot * 0.969),
@@ -1116,7 +1075,6 @@ const Dashboard = ({ user }) => {
     return change >= 0 ? `+${change.toFixed(1)}%` : `${change.toFixed(1)}%`;
   };
   
-  // Stat card component matching the exact Figma design
   const StatCard = ({ label, value, icon: Icon, currentVal, previousVal }) => {
     const trend = calculateTrend(currentVal || 0, previousVal || 0);
     const isPositive = !trend.startsWith('-');
@@ -1158,7 +1116,7 @@ const Dashboard = ({ user }) => {
           pointerEvents: 'none',
         }} />
         
-        {/* Left side - Icon and stats */}
+        {/* Icon and stats */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, position: 'relative', zIndex: 1 }}>
           {/* Glassmorphic Icon container */}
           <div style={{
@@ -1209,7 +1167,7 @@ const Dashboard = ({ user }) => {
           </div>
         </div>
         
-        {/* Right side - Trend indicator */}
+        {/* Trend indicator */}
         <div style={{ 
           textAlign: 'right', 
           flexShrink: 0, 
@@ -1283,7 +1241,6 @@ const Dashboard = ({ user }) => {
           pointerEvents: 'none',
         }} />
         
-        {/* 3D Star decoration - using actual SVG file */}
         <div style={{ 
           position: 'absolute', 
           right: 30, 
@@ -1307,7 +1264,6 @@ const Dashboard = ({ user }) => {
           />
         </div>
         
-        {/* Text content */}
         <div style={{ position: 'relative', zIndex: 1 }}>
           <p style={{ 
             fontSize: 22, 
@@ -1334,7 +1290,6 @@ const Dashboard = ({ user }) => {
         </div>
       </div>
       
-      {/* Stats Grid - 4 cards matching design exactly */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
         <StatCard 
           label="Total Leads" 
@@ -1367,7 +1322,6 @@ const Dashboard = ({ user }) => {
       </div>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
-        {/* Top Leads */}
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: c.gray[100] }}>Top Leads</h3>
@@ -1387,7 +1341,6 @@ const Dashboard = ({ user }) => {
                   <p style={{ fontSize: 14, fontWeight: 500, color: c.gray[100], whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{lead.name}</p>
                   <p style={{ fontSize: 12, color: c.gray[500], whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{lead.company}</p>
                 </div>
-                {/* Score bar like in design */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ width: 70, height: 6, background: c.gray[800], borderRadius: 3, overflow: 'hidden' }}>
                     <div style={{ 
@@ -1404,7 +1357,6 @@ const Dashboard = ({ user }) => {
           </div>
         </Card>
         
-        {/* Recent Leads */}
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <h3 style={{ fontSize: 16, fontWeight: 600, color: c.gray[100] }}>Recent Leads</h3>
@@ -1428,9 +1380,7 @@ const Dashboard = ({ user }) => {
   );
 };
 
-// ============================================================================
 // LEADS PAGE
-// ============================================================================
 
 const LeadsPage = ({ user, highlightLead }) => {
   const [leads, setLeads] = useState(MOCK_LEADS_BY_CLIENT[user.id] || []);
@@ -1442,8 +1392,6 @@ const LeadsPage = ({ user, highlightLead }) => {
   const [selectedLead, setSelectedLead] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  
-  // Handle imported leads
   const handleImportLeads = (importedLeads) => {
     setLeads(prev => [...importedLeads, ...prev]);
     setShowImport(false);
@@ -1467,13 +1415,11 @@ const LeadsPage = ({ user, highlightLead }) => {
       });
   }, [leads, search, status, sort]);
   
-  // Pagination calculations
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedLeads = filtered.slice(startIndex, endIndex);
   
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [search, status, sort, itemsPerPage]);
@@ -1494,7 +1440,6 @@ const LeadsPage = ({ user, highlightLead }) => {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
   };
   
-  // Generate page numbers to display
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;
@@ -1523,7 +1468,6 @@ const LeadsPage = ({ user, highlightLead }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Stats bar */}
       <div style={{ display: 'flex', gap: 32, padding: '14px 20px', background: c.gray[900], borderRadius: r.xl, border: `1px solid ${c.gray[800]}` }}>
         {[
           { label: 'Total', value: stats.total, color: c.gray[100] },
@@ -1538,7 +1482,6 @@ const LeadsPage = ({ user, highlightLead }) => {
         ))}
       </div>
       
-      {/* Filters */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ flex: 1, minWidth: 200, maxWidth: 300, position: 'relative' }}>
           <Search size={18} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: c.gray[500] }} />
@@ -1581,7 +1524,6 @@ const LeadsPage = ({ user, highlightLead }) => {
         </div>
       </div>
       
-      {/* Table */}
       <Card padding={0} style={{ overflow: 'hidden' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -1638,7 +1580,6 @@ const LeadsPage = ({ user, highlightLead }) => {
           </div>
         )}
         
-        {/* Pagination Controls */}
         {filtered.length > 0 && (
           <div style={{ padding: '12px 16px', borderTop: `1px solid ${c.gray[800]}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
             <p style={{ fontSize: 13, color: c.gray[500] }}>
@@ -1646,7 +1587,6 @@ const LeadsPage = ({ user, highlightLead }) => {
             </p>
             
             <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-              {/* Previous Button */}
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -1658,7 +1598,6 @@ const LeadsPage = ({ user, highlightLead }) => {
                 Previous
               </button>
               
-              {/* Page Numbers */}
               {getPageNumbers().map((pageNum, idx) => (
                 pageNum === '...' ? (
                   <span key={`ellipsis-${idx}`} style={{ padding: '6px 8px', fontSize: 13, color: c.gray[500] }}>...</span>
@@ -1676,7 +1615,6 @@ const LeadsPage = ({ user, highlightLead }) => {
                 )
               ))}
               
-              {/* Next Button */}
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
@@ -1713,7 +1651,6 @@ const LeadsPage = ({ user, highlightLead }) => {
   );
 };
 
-// Verification Badge Component
 const VerificationBadge = ({ lead }) => {
   const isEmailVerified = lead.emailVerified;
   const isEnriched = lead.enriched;
@@ -1740,10 +1677,6 @@ const VerificationBadge = ({ lead }) => {
     </span>
   );
 };
-
-// ============================================================================
-// LEAD IMPORT MODAL COMPONENT
-// ============================================================================
 
 const LEAD_FIELDS = [
   { id: 'name', label: 'Full Name', required: true, example: 'John Smith' },
@@ -1777,7 +1710,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
   const [duplicateHandling, setDuplicateHandling] = useState('skip'); // skip, update, allow
   const fileInputRef = useRef(null);
   
-  // Parse CSV content
   const parseCSV = (text) => {
     const lines = text.split(/\r?\n/).filter(line => line.trim());
     if (lines.length === 0) return { headers: [], data: [] };
@@ -1815,7 +1747,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     return { headers, data };
   };
   
-  // Parse JSON content
   const parseJSON = (text) => {
     const data = JSON.parse(text);
     const rows = Array.isArray(data) ? data : [data];
@@ -1825,7 +1756,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     return { headers, data: rows };
   };
   
-  // Handle file selection
   const handleFileSelect = async (selectedFile) => {
     if (!selectedFile) return;
     
@@ -1847,7 +1777,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     setHeaders(parsed.headers);
     setRawData(parsed.data);
     
-    // Auto-map fields based on header names
     const autoMapping = {};
     parsed.headers.forEach(header => {
       const normalizedHeader = header.toLowerCase().replace(/[^a-z]/g, '');
@@ -1868,7 +1797,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     setStep(2);
   };
   
-  // Handle drag events
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -1889,7 +1817,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     }
   };
   
-  // Validate and preview data
   const validateAndPreview = () => {
     const errors = [];
     const preview = [];
@@ -1899,26 +1826,22 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
       const lead = {};
       const rowErrors = [];
       
-      // Map fields
       Object.entries(fieldMapping).forEach(([csvHeader, leadField]) => {
         if (leadField && row[csvHeader]) {
           lead[leadField] = row[csvHeader];
         }
       });
       
-      // Check required fields
       LEAD_FIELDS.filter(f => f.required).forEach(field => {
         if (!lead[field.id] || !lead[field.id].trim()) {
           rowErrors.push(`Missing ${field.label}`);
         }
       });
       
-      // Validate email format
       if (lead.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) {
         rowErrors.push('Invalid email format');
       }
       
-      // Check for duplicates
       const isDuplicate = lead.email && emailSet.has(lead.email.toLowerCase());
       if (isDuplicate && duplicateHandling === 'skip') {
         rowErrors.push('Duplicate email (will be skipped)');
@@ -1955,7 +1878,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
       leads: [],
     };
     
-    // Simulate import process
     await new Promise(r => setTimeout(r, 500));
     
     const existingEmails = new Set(existingLeads.map(l => l.email?.toLowerCase()));
@@ -1974,7 +1896,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
         return;
       }
       
-      // Create lead object
       const newLead = {
         id: `imported-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         name: item.data.name || 'Unknown',
@@ -2008,7 +1929,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     setStep(4);
   };
   
-  // Download sample template
   const downloadTemplate = () => {
     const headers = LEAD_FIELDS.map(f => f.label).join(',');
     const example = LEAD_FIELDS.map(f => f.example).join(',');
@@ -2022,7 +1942,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
     URL.revokeObjectURL(url);
   };
   
-  // Complete import
   const completeImport = () => {
     if (importResults && importResults.leads.length > 0) {
       onImport(importResults.leads);
@@ -2116,7 +2035,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
                 </p>
               </div>
               
-              {/* Template Download */}
               <Card style={{ background: c.gray[850] }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{ width: 44, height: 44, borderRadius: r.lg, background: c.primary[100], display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -2132,7 +2050,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
                 </div>
               </Card>
               
-              {/* Supported Fields */}
               <div>
                 <p style={{ fontSize: 13, fontWeight: 600, color: c.gray[400], marginBottom: 10 }}>Supported Fields</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -2150,7 +2067,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
             </div>
           )}
           
-          {/* Step 2: Field Mapping */}
           {step === 2 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <Card style={{ background: c.gray[850] }}>
@@ -2196,7 +2112,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
                 </div>
               </div>
               
-              {/* Required fields check */}
               <div style={{ padding: 14, background: c.gray[850], borderRadius: r.lg }}>
                 <p style={{ fontSize: 12, fontWeight: 600, color: c.gray[400], marginBottom: 8 }}>Required Fields</p>
                 <div style={{ display: 'flex', gap: 12 }}>
@@ -2218,10 +2133,8 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
             </div>
           )}
           
-          {/* Step 3: Preview */}
           {step === 3 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              {/* Summary Stats */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
                 {[
                   { label: 'Total Rows', value: previewData.length, color: c.gray[200] },
@@ -2236,7 +2149,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
                 ))}
               </div>
               
-              {/* Duplicate Handling */}
               {duplicateCount > 0 && (
                 <Card style={{ background: c.warning.muted, border: `1px solid ${c.warning.DEFAULT}30` }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -2262,7 +2174,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
                 </Card>
               )}
               
-              {/* Data Preview Table */}
               <div style={{ background: c.gray[850], borderRadius: r.lg, overflow: 'hidden' }}>
                 <div style={{ padding: '12px 16px', borderBottom: `1px solid ${c.gray[800]}` }}>
                   <p style={{ fontSize: 13, fontWeight: 600, color: c.gray[400] }}>Data Preview</p>
@@ -2310,7 +2221,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
                 )}
               </div>
               
-              {/* Error Summary */}
               {errorCount > 0 && (
                 <div style={{ padding: 14, background: c.error.muted, borderRadius: r.lg, border: `1px solid ${c.error.DEFAULT}30` }}>
                   <p style={{ fontSize: 13, fontWeight: 600, color: c.error.DEFAULT, marginBottom: 8 }}>
@@ -2329,7 +2239,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
             </div>
           )}
           
-          {/* Step 4: Results */}
           {step === 4 && importResults && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'center', textAlign: 'center', padding: 20 }}>
               <div style={{
@@ -2375,7 +2284,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
           )}
         </div>
         
-        {/* Footer */}
         <div style={{ padding: '16px 24px', borderTop: `1px solid ${c.gray[800]}`, display: 'flex', justifyContent: 'space-between' }}>
           <div>
             {step > 1 && step < 4 && (
@@ -2413,7 +2321,6 @@ const LeadImportModal = ({ onClose, onImport, existingLeads = [] }) => {
   );
 };
 
-// Lead Detail Modal Component
 const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [enriching, setEnriching] = useState(false);
@@ -2562,7 +2469,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
     { id: 'notes', label: 'Notes', icon: FileText },
   ];
   
-  // Mock activity data
   const activities = [
     { type: 'email_opened', desc: 'Opened email: "Quick question about your goals"', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
     { type: 'page_view', desc: 'Visited pricing page (3 min)', date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
@@ -2583,7 +2489,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '40px 20px', zIndex: 100, overflowY: 'auto' }}>
       <Card onClick={(e) => e.stopPropagation()} padding={0} style={{ width: '100%', maxWidth: 900, marginBottom: 40 }}>
-        {/* Header */}
         <div style={{ padding: 20, borderBottom: `1px solid ${c.gray[800]}`, display: 'flex', gap: 16 }}>
           <Avatar name={lead.name} size={64} />
           <div style={{ flex: 1 }}>
@@ -2632,14 +2537,12 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
           </div>
         </div>
         
-        {/* Quick Actions with Integration Status */}
         <div style={{ padding: '12px 20px', borderBottom: `1px solid ${c.gray[800]}`, display: 'flex', gap: 10, background: c.gray[850], flexWrap: 'wrap', alignItems: 'center' }}>
           <Button size="sm" icon={Mail}>Send Email</Button>
           <Button size="sm" variant="secondary" icon={Phone}>Call</Button>
           <Button size="sm" variant="secondary" icon={Zap}>Add to Sequence</Button>
           
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {/* Enrich Button with Provider Info */}
             <div style={{ position: 'relative' }}>
               <Button size="sm" variant={enrichmentData ? 'ghost' : 'secondary'} icon={Sparkles} onClick={handleEnrich} disabled={enriching}>
                 {enriching ? 'Enriching...' : enrichmentData ? `Re-enrich` : 'Enrich Data'}
@@ -2649,7 +2552,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
               )}
             </div>
             
-            {/* Verify Button with Provider Info */}
             <div style={{ position: 'relative' }}>
               <Button size="sm" variant={verificationData?.status === 'valid' ? 'ghost' : 'secondary'} icon={Shield} onClick={handleVerify} disabled={verifying}>
                 {verifying ? 'Verifying...' : verificationData ? 'Re-verify' : 'Verify Email'}
@@ -2659,7 +2561,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
               )}
             </div>
             
-            {/* Sync to CRM */}
             <div style={{ position: 'relative' }}>
               <Button size="sm" variant={lead.crmSynced ? 'ghost' : 'secondary'} icon={RefreshCw} onClick={handleSyncToCRM} disabled={syncing}>
                 {syncing ? 'Syncing...' : lead.crmSynced ? 'Synced' : 'Sync to CRM'}
@@ -2671,7 +2572,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
           </div>
         </div>
         
-        {/* Integration Status Banner */}
         {(!hasAnyEnrichment || !hasAnyVerification || !hasAnyCRM) && !enrichmentData && !verificationData && (
           <div style={{ padding: '10px 20px', background: c.warning.muted, borderBottom: `1px solid ${c.gray[800]}`, display: 'flex', alignItems: 'center', gap: 10 }}>
             <AlertCircle size={16} style={{ color: c.warning.DEFAULT }} />
@@ -2687,7 +2587,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
           </div>
         )}
         
-        {/* Tabs */}
         <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${c.gray[800]}`, flexShrink: 0, overflowX: 'auto' }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -2705,11 +2604,9 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
           ))}
         </div>
         
-        {/* Content */}
         <div style={{ padding: 20 }}>
           {activeTab === 'overview' && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-              {/* Contact Info */}
               <div>
                 <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contact Information</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -2729,7 +2626,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                   )}
                 </div>
                 
-                {/* Bio if enriched */}
                 {enrichmentData?.contact?.bio && (
                   <div style={{ marginTop: 16, padding: 12, background: c.gray[850], borderRadius: r.lg, borderLeft: `3px solid ${c.primary.DEFAULT}` }}>
                     <p style={{ fontSize: 13, color: c.gray[400], lineHeight: 1.6, fontStyle: 'italic' }}>
@@ -2739,7 +2635,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                 )}
               </div>
               
-              {/* Lead Details */}
               <div>
                 <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lead Details</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -2754,7 +2649,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                 </div>
               </div>
               
-              {/* Verification Status */}
               {verificationData && (
                 <div style={{ gridColumn: '1 / -1' }}>
                   <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -2804,7 +2698,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                 </div>
               )}
               
-              {/* Skills/Tags if enriched */}
               {enrichmentData?.contact?.skills && (
                 <div style={{ gridColumn: '1 / -1' }}>
                   <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Skills & Expertise</h3>
@@ -2841,7 +2734,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                     </div>
                   </div>
                   
-                  {/* Company Metrics */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
                     <div style={{ padding: 16, background: c.gray[850], borderRadius: r.lg, textAlign: 'center' }}>
                       <Users size={20} style={{ color: c.primary.DEFAULT, marginBottom: 8 }} />
@@ -2865,13 +2757,11 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                     </div>
                   </div>
                   
-                  {/* Description */}
                   <div>
                     <h4 style={{ fontSize: 13, fontWeight: 600, color: c.gray[300], marginBottom: 8 }}>About</h4>
                     <p style={{ fontSize: 14, color: c.gray[400], lineHeight: 1.7 }}>{enrichmentData.company.description}</p>
                   </div>
                   
-                  {/* Funding Details */}
                   {enrichmentData.company.funding && (
                     <div>
                       <h4 style={{ fontSize: 13, fontWeight: 600, color: c.gray[300], marginBottom: 12 }}>Funding History</h4>
@@ -2897,7 +2787,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                     </div>
                   )}
                   
-                  {/* Tech Stack */}
                   {enrichmentData.company.techStack && (
                     <div>
                       <h4 style={{ fontSize: 13, fontWeight: 600, color: c.gray[300], marginBottom: 10 }}>Tech Stack</h4>
@@ -2911,7 +2800,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                     </div>
                   )}
                   
-                  {/* Tags */}
                   {enrichmentData.company.tags && (
                     <div>
                       <h4 style={{ fontSize: 13, fontWeight: 600, color: c.gray[300], marginBottom: 10 }}>Industry Tags</h4>
@@ -2925,7 +2813,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
                     </div>
                   )}
                   
-                  {/* Links */}
                   <div style={{ display: 'flex', gap: 10 }}>
                     {enrichmentData.company.website && (
                       <a href={enrichmentData.company.website} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: c.gray[850], borderRadius: r.lg, fontSize: 13, color: c.primary.DEFAULT, textDecoration: 'none' }}>
@@ -3078,7 +2965,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
           )}
         </div>
         
-        {/* Footer with data source info */}
         {(enrichmentData || verificationData) && (
           <div style={{ padding: '10px 20px', background: c.gray[850], borderTop: `1px solid ${c.gray[800]}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, color: c.gray[600] }}>
             <span>
@@ -3098,7 +2984,6 @@ const LeadDetailModal = ({ lead, onClose, onUpdate }) => {
   );
 };
 
-// Info Row Component
 const InfoRow = ({ icon: Icon, label, value, verified, enriched, link }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
     <Icon size={16} style={{ color: c.gray[500], flexShrink: 0 }} />
@@ -3119,9 +3004,6 @@ const InfoRow = ({ icon: Icon, label, value, verified, enriched, link }) => (
   </div>
 );
 
-// ============================================================================
-// EXPORT MODAL
-// ============================================================================
 const ExportModal = ({ isOpen, onClose, data }) => {
   const [format, setFormat] = useState('csv');
   const [loading, setLoading] = useState(false);
@@ -3203,12 +3085,8 @@ const ExportModal = ({ isOpen, onClose, data }) => {
   );
 };
 
-// ============================================================================
-// AI ASSISTANT - Production-Grade Sales Intelligence
-// ============================================================================
 import LeadAI, { callClaudeAPI, calculateLeadScore, predictConversion, forecastPipeline, identifyAtRiskLeads, recommendNextAction } from './services/leadAI';
 
-// Markdown-like renderer for AI responses
 const renderMarkdown = (text) => {
   if (!text) return null;
   
@@ -3220,13 +3098,11 @@ const renderMarkdown = (text) => {
   let codeContent = [];
   
   const processInlineFormatting = (line, idx) => {
-    // Bold
     const parts = line.split(/\*\*(.+?)\*\*/g);
     return parts.map((part, i) => i % 2 === 1 ? <strong key={`${idx}-${i}`} style={{ color: c.gray[100] }}>{part}</strong> : part);
   };
   
   lines.forEach((line, idx) => {
-    // Code blocks
     if (line.startsWith('```')) {
       if (inCodeBlock) {
         elements.push(
@@ -3241,7 +3117,6 @@ const renderMarkdown = (text) => {
     }
     if (inCodeBlock) { codeContent.push(line); return; }
     
-    // Headers
     if (line.startsWith('## ')) {
       elements.push(<h2 key={idx} style={{ fontSize: 16, fontWeight: 600, color: c.gray[100], margin: '16px 0 8px', display: 'flex', alignItems: 'center', gap: 8 }}>{line.slice(3)}</h2>);
       return;
@@ -3251,13 +3126,11 @@ const renderMarkdown = (text) => {
       return;
     }
     
-    // Tables
     if (line.startsWith('|')) {
       if (!inTable) { inTable = true; tableRows = []; }
       tableRows.push(line);
       return;
     } else if (inTable) {
-      // Render table
       const headers = tableRows[0]?.split('|').filter(c => c.trim()).map(c => c.trim());
       const dataRows = tableRows.slice(2).map(r => r.split('|').filter(c => c.trim()).map(c => c.trim()));
       
@@ -3279,13 +3152,11 @@ const renderMarkdown = (text) => {
       tableRows = [];
     }
     
-    // Horizontal rule
     if (line === '---') {
       elements.push(<hr key={idx} style={{ border: 'none', borderTop: `1px solid ${c.gray[800]}`, margin: '12px 0' }} />);
       return;
     }
     
-    // Bullet points
     if (line.startsWith('- ') || line.startsWith('• ')) {
       elements.push(
         <div key={idx} style={{ display: 'flex', gap: 8, marginLeft: 8, marginBottom: 4 }}>
@@ -3308,13 +3179,11 @@ const renderMarkdown = (text) => {
       return;
     }
     
-    // Empty lines
     if (!line.trim()) {
       elements.push(<div key={idx} style={{ height: 8 }} />);
       return;
     }
     
-    // Regular paragraphs
     elements.push(<p key={idx} style={{ color: c.gray[300], lineHeight: 1.6, marginBottom: 4 }}>{processInlineFormatting(line, idx)}</p>);
   });
   
@@ -3330,7 +3199,6 @@ const AIAssistant = ({ user }) => {
   const [selectedLead, setSelectedLead] = useState(null);
   const chatRef = useRef(null);
   
-  // Computed analytics
   const analytics = useMemo(() => {
     const topLeads = [...leads].sort((a, b) => b.score - a.score).slice(0, 10);
     const atRisk = identifyAtRiskLeads(leads);
@@ -3351,7 +3219,6 @@ const AIAssistant = ({ user }) => {
     };
   }, [leads]);
   
-  // Initialize with welcome message
   useEffect(() => {
     if (messages.length === 0) {
       const atRiskCount = analytics.atRisk.length;
@@ -3381,7 +3248,6 @@ What would you like to explore?`,
     }
   }, []);
   
-  // Auto-scroll
   useEffect(() => {
     if (chatRef.current) {
       setTimeout(() => {
@@ -3390,7 +3256,6 @@ What would you like to explore?`,
     }
   }, [messages]);
   
-  // Send message
   const handleSend = async () => {
     if (!input.trim() || isProcessing) return;
     
@@ -3400,13 +3265,11 @@ What would you like to explore?`,
     setIsProcessing(true);
     
     try {
-      // Build conversation history for API
       const conversationHistory = [...messages, userMessage].map(m => ({
         role: m.role,
         content: m.content,
       }));
       
-      // Call Claude API (falls back to intelligent local responses if no API key)
       const response = await callClaudeAPI(conversationHistory, user, leads);
       
       setMessages(prev => [...prev, {
@@ -3426,7 +3289,6 @@ What would you like to explore?`,
     setIsProcessing(false);
   };
   
-  // Quick action prompts
   const quickPrompts = [
     { icon: Target, label: 'Priority leads', query: 'Which leads should I prioritize today?' },
     { icon: Mail, label: 'Draft email', query: 'Write an outreach email to my top lead' },
@@ -3436,7 +3298,6 @@ What would you like to explore?`,
     { icon: MessageSquare, label: 'Objections', query: 'How should I handle pricing objections?' },
   ];
   
-  // Lead quick actions
   const handleLeadAction = (lead, action) => {
     const queries = {
       email: `Write a personalized outreach email to ${lead.name} at ${lead.company}`,
@@ -3450,9 +3311,7 @@ What would you like to explore?`,
 
   return (
     <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 160px)', minHeight: 500 }}>
-      {/* Main Chat Area */}
       <Card padding={0} style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        {/* Tab Header */}
         <div style={{ display: 'flex', borderBottom: `1px solid ${c.gray[800]}`, background: c.gray[900] }}>
           {[
             { id: 'chat', label: 'Chat', icon: MessageSquare },
@@ -3478,7 +3337,6 @@ What would you like to explore?`,
         
         {activeTab === 'chat' ? (
           <>
-            {/* Messages */}
             <div ref={chatRef} style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
               {messages.map((msg, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: 20 }}>
@@ -3516,7 +3374,6 @@ What would you like to explore?`,
               )}
             </div>
             
-            {/* Quick Prompts */}
             <div style={{ padding: '12px 16px', borderTop: `1px solid ${c.gray[800]}`, display: 'flex', gap: 8, flexWrap: 'wrap', background: c.gray[900] }}>
               {quickPrompts.map(p => (
                 <button
@@ -3537,7 +3394,6 @@ What would you like to explore?`,
               ))}
             </div>
             
-            {/* Input */}
             <div style={{ padding: 16, borderTop: `1px solid ${c.gray[800]}`, display: 'flex', gap: 12 }}>
               <input
                 placeholder="Ask about your leads, request emails, forecasts, strategies..."
@@ -3558,9 +3414,7 @@ What would you like to explore?`,
             </div>
           </>
         ) : (
-          /* Quick Insights Tab */
           <div style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
-            {/* Forecast Card */}
             <div style={{ marginBottom: 20 }}>
               <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <BarChart3 size={16} style={{ color: c.primary.DEFAULT }} />
@@ -3581,7 +3435,6 @@ What would you like to explore?`,
               </div>
             </div>
             
-            {/* At-Risk Leads */}
             {analytics.atRisk.length > 0 && (
               <div style={{ marginBottom: 20 }}>
                 <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -3608,7 +3461,6 @@ What would you like to explore?`,
               </div>
             )}
             
-            {/* Top Leads */}
             <div>
               <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[300], marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Target size={16} style={{ color: c.success.DEFAULT }} />
@@ -3659,9 +3511,7 @@ What would you like to explore?`,
         )}
       </Card>
       
-      {/* Right Sidebar */}
       <div style={{ width: 280, display: 'flex', flexDirection: 'column', gap: 16 }} className="ai-sidebar">
-        {/* Pipeline Stats */}
         <Card>
           <p style={{ fontSize: 11, fontWeight: 600, color: c.gray[500], textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>Pipeline Overview</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -3681,7 +3531,6 @@ What would you like to explore?`,
           </div>
         </Card>
         
-        {/* AI Capabilities */}
         <Card>
           <p style={{ fontSize: 11, fontWeight: 600, color: c.gray[500], textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>AI Capabilities</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -3706,7 +3555,6 @@ What would you like to explore?`,
           </div>
         </Card>
         
-        {/* Quick Tips */}
         <Card style={{ background: `linear-gradient(135deg, ${c.primary[100]}, ${c.accent.muted})`, border: `1px solid ${c.primary.DEFAULT}30` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <Lightbulb size={16} style={{ color: c.primary.DEFAULT }} />
@@ -3721,9 +3569,6 @@ What would you like to explore?`,
   );
 };
 
-// ============================================================================
-// SEQUENCES PAGE - Phase 1
-// ============================================================================
 import { sequenceEngine, SEQUENCE_TEMPLATES, SEQUENCE_STATUS, CHANNEL_TYPES, EMAIL_TEMPLATES } from './services/sequenceService';
 
 const SequencesPage = ({ user }) => {
@@ -3733,17 +3578,11 @@ const SequencesPage = ({ user }) => {
   const [editingSequence, setEditingSequence] = useState(null);
   const [showEnrollModal, setShowEnrollModal] = useState(false);
   const [enrollSequenceId, setEnrollSequenceId] = useState(null);
-  
-  // New: Tab state for Email Integration
   const [activeTab, setActiveTab] = useState('sequences');
-  
-  // Email account states
   const [emailConnections, setEmailConnections] = useState([
     { id: 'conn_gmail_demo', providerId: 'gmail', email: 'chris@azimontgroup.com', status: 'connected', dailySent: 45, dailyLimit: 500, connectedAt: new Date(Date.now() - 7 * 86400000).toISOString() }
   ]);
   const [showConnectEmail, setShowConnectEmail] = useState(false);
-  
-  // Domain states
   const [domains, setDomains] = useState([
     { 
       id: 'dom_1', domain: 'azimontgroup.com', status: 'verified', verifiedAt: new Date(Date.now() - 5 * 86400000).toISOString(),
@@ -3757,9 +3596,7 @@ const SequencesPage = ({ user }) => {
     }
   ]);
   const [showAddDomain, setShowAddDomain] = useState(false);
-  const [newDomain, setNewDomain] = useState('');
-  
-  // Warmup states  
+  const [newDomain, setNewDomain] = useState('');  
   const [warmups, setWarmups] = useState([
     {
       id: 'warmup_1', connectionId: 'conn_gmail_demo', email: 'chris@azimontgroup.com', schedule: 'moderate', status: 'in_progress',
@@ -3769,24 +3606,16 @@ const SequencesPage = ({ user }) => {
     }
   ]);
   
-  // SMS states
   const [smsConnections, setSmsConnections] = useState([]);
   const [showConnectSMS, setShowConnectSMS] = useState(false);
   const [smsProvider, setSmsProvider] = useState(null); // 'twilio' or 'messagebird'
   const [smsCredentials, setSmsCredentials] = useState({ accountSid: '', authToken: '', phoneNumber: '', apiKey: '', originator: '' });
-  
-  // Email settings modal
   const [showEmailSettings, setShowEmailSettings] = useState(false);
   const [selectedEmailAccount, setSelectedEmailAccount] = useState(null);
-  
-  // Domain setup modal (shows DNS records after adding)
   const [showDomainSetup, setShowDomainSetup] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState(null);
-  
-  // Warmup settings modal
   const [showWarmupSettings, setShowWarmupSettings] = useState(false);
   const [selectedWarmup, setSelectedWarmup] = useState(null);
-  
   const refreshSequences = () => setSequences(sequenceEngine.listSequences());
   
   const stats = useMemo(() => {
@@ -3814,7 +3643,6 @@ const SequencesPage = ({ user }) => {
     { id: 'sms', label: 'SMS', icon: MessageSquare },
   ];
   
-  // Create sequence from template
   const handleCreateFromTemplate = (template) => {
     const newSequence = {
       id: `seq-${Date.now()}`,
@@ -3850,7 +3678,6 @@ const SequencesPage = ({ user }) => {
     setEditingSequence(newSequence);
   };
   
-  // Create blank sequence
   const handleCreateBlank = () => {
     const newSequence = {
       id: `seq-${Date.now()}`,
@@ -3877,7 +3704,6 @@ const SequencesPage = ({ user }) => {
     setEditingSequence(newSequence);
   };
   
-  // Toggle sequence status
   const toggleSequenceStatus = (seq) => {
     const newStatus = seq.status === SEQUENCE_STATUS.ACTIVE ? SEQUENCE_STATUS.PAUSED : SEQUENCE_STATUS.ACTIVE;
     seq.status = newStatus;
@@ -3885,7 +3711,6 @@ const SequencesPage = ({ user }) => {
     refreshSequences();
   };
   
-  // Delete sequence
   const deleteSequence = (seqId) => {
     if (confirm('Are you sure you want to delete this sequence?')) {
       sequenceEngine.sequences.delete(seqId);
@@ -3894,15 +3719,12 @@ const SequencesPage = ({ user }) => {
     }
   };
   
-  // Open enroll modal
   const openEnrollModal = (seqId) => {
     setEnrollSequenceId(seqId);
     setShowEnrollModal(true);
   };
   
-  // Connect email provider (mock)
   const handleConnectEmail = (provider) => {
-    // In production, this would initiate OAuth flow
     const mockConnection = {
       id: `conn_${provider}_${Date.now()}`,
       providerId: provider,
@@ -3916,7 +3738,6 @@ const SequencesPage = ({ user }) => {
     setShowConnectEmail(false);
   };
   
-  // Add domain
   const handleAddDomain = () => {
     if (!newDomain.trim()) return;
     const domain = {
@@ -3936,11 +3757,9 @@ const SequencesPage = ({ user }) => {
     setShowAddDomain(false);
   };
   
-  // Verify domain (mock)
   const handleVerifyDomain = (domainId) => {
     setDomains(prev => prev.map(d => {
       if (d.id !== domainId) return d;
-      // Simulate verification
       const verified = Math.random() > 0.3;
       const updatedDomain = {
         ...d,
@@ -3954,7 +3773,6 @@ const SequencesPage = ({ user }) => {
           tracking: { ...d.dnsRecords.tracking, status: verified ? 'verified' : 'pending' },
         },
       };
-      // Update selectedDomain if it's the same domain
       if (selectedDomain && selectedDomain.id === domainId) {
         setSelectedDomain(updatedDomain);
       }
@@ -3962,7 +3780,6 @@ const SequencesPage = ({ user }) => {
     }));
   };
   
-  // Start warmup
   const handleStartWarmup = (connectionId, schedule = 'moderate') => {
     const connection = emailConnections.find(c => c.id === connectionId);
     if (!connection) return;
@@ -3983,7 +3800,6 @@ const SequencesPage = ({ user }) => {
     setWarmups(prev => [...prev, warmup]);
   };
   
-  // Disconnect email account
   const handleDisconnectEmail = (connectionId) => {
     if (confirm('Are you sure you want to disconnect this email account? This will stop all active sequences using this account.')) {
       setEmailConnections(prev => prev.filter(c => c.id !== connectionId));
@@ -3991,7 +3807,6 @@ const SequencesPage = ({ user }) => {
     }
   };
   
-  // Update email account settings
   const handleUpdateEmailSettings = (connectionId, settings) => {
     setEmailConnections(prev => prev.map(c => 
       c.id === connectionId ? { ...c, ...settings } : c
@@ -4000,7 +3815,6 @@ const SequencesPage = ({ user }) => {
     setSelectedEmailAccount(null);
   };
   
-  // Toggle warmup pause/resume
   const handleToggleWarmup = (warmupId) => {
     setWarmups(prev => prev.map(w => {
       if (w.id !== warmupId) return w;
@@ -4008,7 +3822,6 @@ const SequencesPage = ({ user }) => {
     }));
   };
   
-  // Update warmup settings
   const handleUpdateWarmupSettings = (warmupId, settings) => {
     setWarmups(prev => prev.map(w => {
       if (w.id !== warmupId) return w;
@@ -4018,12 +3831,10 @@ const SequencesPage = ({ user }) => {
     setSelectedWarmup(null);
   };
   
-  // Copy text to clipboard
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
   };
   
-  // Add domain with setup modal
   const handleAddDomainWithSetup = () => {
     if (!newDomain.trim()) return;
     const domainName = newDomain.toLowerCase().trim();
@@ -4043,12 +3854,10 @@ const SequencesPage = ({ user }) => {
     setDomains(prev => [...prev, domain]);
     setNewDomain('');
     setShowAddDomain(false);
-    // Show DNS setup modal
     setSelectedDomain(domain);
     setShowDomainSetup(true);
   };
   
-  // Connect SMS provider
   const handleConnectSMS = (provider) => {
     if (provider === 'twilio') {
       if (!smsCredentials.accountSid || !smsCredentials.authToken || !smsCredentials.phoneNumber) {
@@ -4088,7 +3897,6 @@ const SequencesPage = ({ user }) => {
     setShowConnectSMS(false);
   };
   
-  // Disconnect SMS provider
   const handleDisconnectSMS = (connectionId) => {
     if (confirm('Are you sure you want to disconnect this SMS provider?')) {
       setSmsConnections(prev => prev.filter(c => c.id !== connectionId));
@@ -4097,7 +3905,6 @@ const SequencesPage = ({ user }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Tab Navigation */}
       <div style={{ display: 'flex', gap: 4, padding: 4, background: c.gray[900], borderRadius: r.lg, width: 'fit-content', border: `1px solid ${c.gray[800]}` }}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -4115,10 +3922,8 @@ const SequencesPage = ({ user }) => {
         ))}
       </div>
       
-      {/* ========== SEQUENCES TAB ========== */}
       {activeTab === 'sequences' && (
         <>
-          {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
             <Metric label="Total Enrolled" value={fmt.number(stats.enrolled)} icon={Users} />
             <Metric label="Active" value={fmt.number(stats.active)} icon={Activity} />
@@ -4126,13 +3931,11 @@ const SequencesPage = ({ user }) => {
             <Metric label="Reply Rate" value={`${stats.replyRate}%`} icon={MessageSquare} />
           </div>
           
-          {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2 style={{ fontSize: 18, fontWeight: 600, color: c.gray[100], fontFamily: tokens.font.heading }}>Outreach Sequences</h2>
             <Button icon={Plus} variant="gradient" onClick={() => setShowCreate(true)}>Create Sequence</Button>
           </div>
           
-          {/* Sequence List */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 16 }}>
             {sequences.map(seq => (
               <Card key={seq.id} hover onClick={() => setSelectedSequence(seq)}>
@@ -4150,7 +3953,6 @@ const SequencesPage = ({ user }) => {
                   </span>
                 </div>
                 
-                {/* Step preview */}
                 <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
                   {seq.steps.slice(0, 6).map((step, i) => {
                     const Icon = channelIcons[step.channel] || Mail;
@@ -4163,7 +3965,6 @@ const SequencesPage = ({ user }) => {
                   {seq.steps.length > 6 && <span style={{ fontSize: 12, color: c.gray[500], alignSelf: 'center' }}>+{seq.steps.length - 6}</span>}
                 </div>
                 
-                {/* Stats */}
                 <div style={{ display: 'flex', gap: 16 }}>
                   {[
                     { label: 'Enrolled', value: seq.stats.enrolled },
@@ -4182,7 +3983,6 @@ const SequencesPage = ({ user }) => {
         </>
       )}
       
-      {/* ========== EMAIL ACCOUNTS TAB ========== */}
       {activeTab === 'email' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -4193,7 +3993,6 @@ const SequencesPage = ({ user }) => {
             <Button icon={Plus} variant="gradient" onClick={() => setShowConnectEmail(true)}>Connect Account</Button>
           </div>
           
-          {/* Deliverability Warning */}
           <Card style={{ background: `linear-gradient(135deg, rgba(242, 76, 3, 0.1) 0%, rgba(49, 72, 185, 0.05) 100%)`, border: `1px solid ${c.accent.DEFAULT}30` }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
               <div style={{ width: 40, height: 40, borderRadius: r.lg, background: c.accent.DEFAULT + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -4208,7 +4007,6 @@ const SequencesPage = ({ user }) => {
             </div>
           </Card>
           
-          {/* Connected Accounts */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {emailConnections.map(conn => (
               <Card key={conn.id}>
@@ -4237,7 +4035,6 @@ const SequencesPage = ({ user }) => {
                   </div>
                 </div>
                 
-                {/* Daily limit progress */}
                 <div style={{ marginTop: 16 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                     <span style={{ fontSize: 12, color: c.gray[500] }}>Daily sending limit</span>
@@ -4262,7 +4059,6 @@ const SequencesPage = ({ user }) => {
         </>
       )}
       
-      {/* ========== DOMAINS TAB ========== */}
       {activeTab === 'domains' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -4273,7 +4069,6 @@ const SequencesPage = ({ user }) => {
             <Button icon={Plus} variant="gradient" onClick={() => setShowAddDomain(true)}>Add Domain</Button>
           </div>
           
-          {/* DNS Records Info */}
           <Card style={{ background: c.primary[50] }}>
             <h3 style={{ fontSize: 14, fontWeight: 600, color: c.gray[100], marginBottom: 8 }}>Why Domain Verification Matters</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
@@ -4293,7 +4088,6 @@ const SequencesPage = ({ user }) => {
             </div>
           </Card>
           
-          {/* Domain List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {domains.map(domain => (
               <Card key={domain.id}>
@@ -4325,7 +4119,6 @@ const SequencesPage = ({ user }) => {
                   </div>
                 </div>
                 
-                {/* Health indicators */}
                 {domain.status === 'verified' && (
                   <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
                     {[
@@ -4351,7 +4144,6 @@ const SequencesPage = ({ user }) => {
                   </div>
                 )}
                 
-                {/* DNS Records */}
                 <div style={{ background: c.gray[850], borderRadius: r.lg, padding: 14 }}>
                   <p style={{ fontSize: 12, fontWeight: 600, color: c.gray[400], marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>DNS Records</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -4375,7 +4167,6 @@ const SequencesPage = ({ user }) => {
         </>
       )}
       
-      {/* ========== WARMUP TAB ========== */}
       {activeTab === 'warmup' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -4385,7 +4176,6 @@ const SequencesPage = ({ user }) => {
             </div>
           </div>
           
-          {/* Warmup Explanation */}
           <Card gradient>
             <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
               <div style={{ width: 48, height: 48, borderRadius: r.lg, background: tokens.gradients.brand, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -4413,7 +4203,6 @@ const SequencesPage = ({ user }) => {
             </div>
           </Card>
           
-          {/* Active Warmups */}
           {warmups.map(warmup => (
             <Card key={warmup.id}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -4432,7 +4221,6 @@ const SequencesPage = ({ user }) => {
                 </div>
               </div>
               
-              {/* Custom Volume Settings */}
               <div style={{ marginBottom: 16, padding: 14, background: c.gray[850], borderRadius: r.lg }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   <span style={{ fontSize: 13, fontWeight: 500, color: c.gray[300] }}>Daily Target Volume</span>
@@ -4463,7 +4251,6 @@ const SequencesPage = ({ user }) => {
                 </div>
               </div>
               
-              {/* Progress */}
               <div style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, color: c.gray[400] }}>Volume: {warmup.currentVolume} / {warmup.targetVolume} emails/day</span>
@@ -4474,7 +4261,6 @@ const SequencesPage = ({ user }) => {
                 </div>
               </div>
               
-              {/* Stats */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12, marginBottom: 16 }}>
                 {[
                   { label: 'Sent', value: warmup.stats.totalSent },
@@ -4490,7 +4276,6 @@ const SequencesPage = ({ user }) => {
                 ))}
               </div>
               
-              {/* Daily Log Chart (simplified) */}
               <div style={{ background: c.gray[850], borderRadius: r.lg, padding: 14 }}>
                 <p style={{ fontSize: 12, fontWeight: 600, color: c.gray[400], marginBottom: 10 }}>Daily Activity</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 60 }}>
@@ -4515,7 +4300,6 @@ const SequencesPage = ({ user }) => {
             </Card>
           ))}
           
-          {/* Start new warmup */}
           {emailConnections.filter(c => !warmups.find(w => w.connectionId === c.id)).length > 0 && (
             <Card style={{ textAlign: 'center', padding: 30 }}>
               <TrendingUp size={32} style={{ color: c.gray[600], margin: '0 auto 12px' }} />
@@ -4533,7 +4317,6 @@ const SequencesPage = ({ user }) => {
         </>
       )}
       
-      {/* ========== SMS TAB ========== */}
       {activeTab === 'sms' && (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -4594,9 +4377,6 @@ const SequencesPage = ({ user }) => {
         </>
       )}
       
-      {/* ========== MODALS ========== */}
-      
-      {/* Create Sequence Modal */}
       {showCreate && (
         <ModalOverlay onClose={() => setShowCreate(false)} maxWidth={520}>
           <Card padding={24}>
@@ -4629,7 +4409,6 @@ const SequencesPage = ({ user }) => {
         </ModalOverlay>
       )}
       
-      {/* Connect Email Modal */}
       {showConnectEmail && (
         <ModalOverlay onClose={() => setShowConnectEmail(false)} maxWidth={480}>
           <Card padding={24}>
@@ -4668,7 +4447,6 @@ const SequencesPage = ({ user }) => {
         </ModalOverlay>
       )}
       
-      {/* Add Domain Modal */}
       {showAddDomain && (
         <ModalOverlay onClose={() => setShowAddDomain(false)} maxWidth={480}>
           <Card padding={24}>
@@ -4696,11 +4474,9 @@ const SequencesPage = ({ user }) => {
         </ModalOverlay>
       )}
       
-      {/* Sequence Detail Modal */}
       {selectedSequence && !editingSequence && (
         <div onClick={() => setSelectedSequence(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 24, paddingTop: 40, zIndex: 100, overflowY: 'auto' }}>
           <Card onClick={(e) => e.stopPropagation()} padding={0} style={{ width: '100%', maxWidth: 700 }}>
-            {/* Header */}
             <div style={{ padding: 20, borderBottom: `1px solid ${c.gray[800]}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <h2 style={{ fontSize: 18, fontWeight: 600, color: c.gray[100], marginBottom: 4 }}>{selectedSequence.name}</h2>
@@ -5196,10 +4972,6 @@ const SequencesPage = ({ user }) => {
   );
 };
 
-// ============================================================================
-// CALENDAR PAGE - Google/Outlook Integration
-// ============================================================================
-
 const CalendarPage = ({ user }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('month'); // week, month
@@ -5480,7 +5252,6 @@ const CalendarPage = ({ user }) => {
           </div>
         </Card>
         
-        {/* Side Panel - Today's Schedule & Connected Calendars */}
         <div style={{ width: 320, display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Today's Schedule */}
           <Card>
@@ -5728,7 +5499,6 @@ const CalendarPage = ({ user }) => {
   );
 };
 
-// Sequence Builder Component
 const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColors }) => {
   const [editedSequence, setEditedSequence] = useState(JSON.parse(JSON.stringify(sequence)));
   const [editingStepIndex, setEditingStepIndex] = useState(null);
@@ -5780,7 +5550,6 @@ const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColor
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '40px 20px', zIndex: 100, overflowY: 'auto' }}>
       <Card onClick={(e) => e.stopPropagation()} padding={0} style={{ width: '100%', maxWidth: 900, marginBottom: 40 }}>
-        {/* Header */}
         <div style={{ padding: 20, borderBottom: `1px solid ${c.gray[800]}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <input
@@ -5803,7 +5572,6 @@ const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColor
           </div>
         </div>
         
-        {/* Tabs */}
         <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${c.gray[800]}`, flexShrink: 0 }}>
           {[
             { id: 'steps', label: 'Steps', icon: Zap },
@@ -5824,11 +5592,9 @@ const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColor
           ))}
         </div>
         
-        {/* Content */}
         <div style={{ display: 'flex', minHeight: 400 }}>
           {activeTab === 'steps' && (
             <>
-              {/* Steps List */}
               <div style={{ width: 340, borderRight: `1px solid ${c.gray[800]}`, padding: 16, overflowY: 'auto' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
                   {editedSequence.steps.map((step, i) => {
@@ -5872,7 +5638,6 @@ const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColor
                   })}
                 </div>
                 
-                {/* Add Step Buttons */}
                 <p style={{ fontSize: 12, color: c.gray[500], marginBottom: 10 }}>Add step:</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                   {Object.entries(channelIcons).map(([channel, Icon]) => (
@@ -5887,7 +5652,6 @@ const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColor
                 </div>
               </div>
               
-              {/* Step Editor */}
               <div style={{ flex: 1, padding: 20, overflowY: 'auto' }}>
                 {editingStepIndex !== null && editedSequence.steps[editingStepIndex] ? (
                   <StepEditor
@@ -5975,7 +5739,6 @@ const SequenceBuilder = ({ sequence, onSave, onClose, channelIcons, channelColor
   );
 };
 
-// Step Editor Component
 const StepEditor = ({ step, stepIndex, onUpdate, onDelete, channelColors }) => {
   return (
     <div>
@@ -6007,7 +5770,6 @@ const StepEditor = ({ step, stepIndex, onUpdate, onDelete, channelColors }) => {
         </div>
       </div>
       
-      {/* Channel-specific fields */}
       {step.channel === 'email' && (
         <>
           <div style={{ marginBottom: 16 }}>
@@ -6126,7 +5888,6 @@ const EnrollLeadsModal = ({ sequenceId, onClose, onEnroll }) => {
   };
   
   const handleEnroll = () => {
-    // In real app, would call sequenceEngine.enrollLead for each
     const sequence = sequenceEngine.sequences.get(sequenceId);
     if (sequence) {
       sequence.stats.enrolled += selectedLeads.length;
@@ -6192,10 +5953,6 @@ const EnrollLeadsModal = ({ sequenceId, onClose, onEnroll }) => {
     </div>
   );
 };
-
-// ============================================================================
-// INTEGRATIONS PAGE - Real Configuration UI
-// ============================================================================
 
 const IntegrationsPage = ({ user }) => {
   const [activeTab, setActiveTab] = useState('crm');
@@ -9009,10 +8766,8 @@ const SettingsPage = ({ user }) => {
         </div>
       )}
       
-      {/* Team & Roles Tab */}
       {activeTab === 'team' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* Team Members */}
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
@@ -9115,7 +8870,6 @@ const SettingsPage = ({ user }) => {
         </div>
       )}
       
-      {/* Security Tab */}
       {activeTab === 'security' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
           <Card>
@@ -9181,7 +8935,6 @@ const SettingsPage = ({ user }) => {
         </div>
       )}
       
-      {/* Invite Modal */}
       {showInviteModal && (
         <div onClick={() => setShowInviteModal(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, zIndex: 100 }}>
           <Card onClick={(e) => e.stopPropagation()} padding={24} style={{ width: '100%', maxWidth: 420 }}>
@@ -9218,9 +8971,6 @@ const SettingsPage = ({ user }) => {
   );
 };
 
-// ============================================================================
-// MAIN APP
-// ============================================================================
 export default function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState('dashboard');

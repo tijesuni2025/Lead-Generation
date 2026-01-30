@@ -1,8 +1,3 @@
-# ============================================================================
-# Bluestarai LeadGen Pro - Terraform Infrastructure
-# AWS S3 Static Hosting with CloudFront CDN
-# ============================================================================
-
 terraform {
   required_version = ">= 1.0"
   
@@ -41,10 +36,6 @@ provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
 }
-
-# =============================================================================
-# S3 BUCKET - Static Website Hosting
-# =============================================================================
 
 resource "aws_s3_bucket" "website" {
   bucket = "${var.project_name}-${var.environment}"
@@ -114,9 +105,7 @@ resource "aws_s3_bucket_policy" "website" {
   depends_on = [aws_s3_bucket_public_access_block.website]
 }
 
-# =============================================================================
-# CLOUDFRONT DISTRIBUTION (Optional - for production)
-# =============================================================================
+# CLOUDFRONT DISTRIBUTION (Optional - for production) 
 
 resource "aws_cloudfront_origin_access_control" "website" {
   count = var.enable_cloudfront ? 1 : 0
@@ -219,9 +208,7 @@ resource "aws_s3_bucket_policy" "cloudfront" {
   })
 }
 
-# =============================================================================
 # ACM CERTIFICATE (Optional - for custom domain)
-# =============================================================================
 
 resource "aws_acm_certificate" "website" {
   count    = var.domain_name != "" ? 1 : 0
@@ -241,9 +228,7 @@ resource "aws_acm_certificate" "website" {
   }
 }
 
-# =============================================================================
 # BACKUP BUCKET
-# =============================================================================
 
 resource "aws_s3_bucket" "backups" {
   count  = var.enable_backups ? 1 : 0
@@ -272,9 +257,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "backups" {
   }
 }
 
-# =============================================================================
 # CLOUDWATCH MONITORING
-# =============================================================================
 
 resource "aws_cloudwatch_metric_alarm" "website_4xx_errors" {
   count = var.enable_cloudfront && var.enable_monitoring ? 1 : 0
@@ -320,9 +303,7 @@ resource "aws_cloudwatch_metric_alarm" "website_5xx_errors" {
   alarm_actions = var.alarm_sns_topic_arn != "" ? [var.alarm_sns_topic_arn] : []
 }
 
-# =============================================================================
 # OUTPUTS
-# =============================================================================
 
 output "bucket_name" {
   description = "Name of the S3 bucket"

@@ -1,7 +1,3 @@
-# ============================================================================
-# Development Environment Configuration
-# ============================================================================
-
 environment        = "dev"
 project_name       = "bluestaraileadgen"
 aws_region         = "us-east-2"

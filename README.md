@@ -1,26 +1,26 @@
-# 🚀 Bluestarai LeadGen Pro
+# Bluestarai LeadGen Pro
 
 AI-Powered Lead Management Platform by BluestarAI World Inc.
 
 [![Deploy Status](https://github.com/bluestarai/leadgen-platform/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/bluestarai/leadgen-platform/actions)
 
-## 📋 Overview
+## Overview
 
 Modern, AI-powered lead management platform built with React 19, Vite, and Tailwind CSS.
 
 ### Key Features
 
-- 🎯 **Smart Lead Scoring** - AI-powered lead prioritization
-- 📊 **Pipeline Management** - Visual pipeline tracking
-- 🤖 **AI Lead Analyst** - Claude-powered sales assistant
-- 📤 **Multi-format Export** - CSV, Excel, JSON, PDF
-- 🔒 **Role-based Access** - Admin and client dashboards
+- **Smart Lead Scoring** - AI-powered lead prioritization
+- **Pipeline Management** - Visual pipeline tracking
+- **AI Lead Analyst** - Claude-powered sales assistant
+- **Multi-format Export** - CSV, Excel, JSON, PDF
+- **Role-based Access** - Admin and client dashboards
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 React 19 | Vite 6 | Tailwind CSS 3 | AWS S3 | GitHub Actions
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 npm install
@@ -30,7 +30,7 @@ npm run dev
 
 **Demo**: admin@bluestarai.world / admin123
 
-## 📁 Structure
+## Structure
 
 ```
 ├── .github/workflows/    # CI/CD pipeline
@@ -40,7 +40,7 @@ npm run dev
 └── src/                  # Application code
 ```
 
-## 🔧 Scripts
+## Scripts
 
 | Command | Description |
 |---------|-------------|
@@ -53,14 +53,14 @@ npm run dev
 | `npm run docker:preview` | Docker preview |
 | `npm run security` | Security scan |
 
-## 🐳 Docker
+## Docker
 
 ```bash
 npm run docker:dev      # Development with hot reload
 npm run docker:preview  # Production preview at :8080
 ```
 
-## ☁️ Deployment
+## Deployment
 
 GitHub Actions auto-deploys:
 - `develop` → Staging
@@ -73,15 +73,8 @@ Manual: `./scripts/deploy.sh [dev|staging|production]`
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 
-## 🔐 Security
+## Security
 
 ```bash
 npm run security  # Run comprehensive scan
 ```
-
-## 📄 License
-
-Proprietary - BluestarAI World Inc.
-
----
-Built with ❤️ by BluestarAI World Inc.

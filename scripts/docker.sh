@@ -1,8 +1,4 @@
 #!/bin/bash
-# ============================================================================
-# Bluestarai LeadGen Pro - Docker Helper Script
-# Simplified commands for Docker operations
-# ============================================================================
 
 set -euo pipefail
 
@@ -89,16 +85,12 @@ cmd_stop() {
 cmd_clean() {
     log_info "Cleaning up Docker resources..."
     
-    # Stop containers
     docker compose down 2>/dev/null || true
     
-    # Remove containers
     docker rm -f $(docker ps -a -q --filter "name=$CONTAINER_NAME") 2>/dev/null || true
     
-    # Remove images
     docker rmi $(docker images "$IMAGE_NAME" -q) 2>/dev/null || true
     
-    # Remove dangling images
     docker image prune -f
     
     log_success "Cleanup complete"

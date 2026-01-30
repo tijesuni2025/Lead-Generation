@@ -10,10 +10,6 @@
  * - Performance analytics
  */
 
-// ============================================================================
-// SEQUENCE TYPES & TEMPLATES
-// ============================================================================
-
 export const CHANNEL_TYPES = {
   EMAIL: 'email',
   LINKEDIN: 'linkedin',
@@ -150,10 +146,6 @@ Best,
 {sender_name}`,
   },
 };
-
-// ============================================================================
-// SEQUENCE ENGINE
-// ============================================================================
 
 class SequenceEngine {
   constructor() {
@@ -434,10 +426,6 @@ class SequenceEngine {
     return sequence;
   }
 }
-
-// ============================================================================
-// MOCK DATA GENERATOR
-// ============================================================================
 
 export function generateMockSequenceData() {
   const engine = new SequenceEngine();

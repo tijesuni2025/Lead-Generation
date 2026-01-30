@@ -7,14 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        // BluestarAI Primary Colors (from Brand Guidelines)
         'space-blue': '#3148B9',
         'brand-orange': '#F24C03',
         'dark-blue': '#0B1828',
-        // BluestarAI Secondary Colors
         'brand-grey': '#232323',
         'blue-black': '#020409',
-        // Extended palette for UI
         bluestar: {
           50: '#e8ecf8',
           100: '#c5cdef',
@@ -35,7 +32,6 @@ export default {
         }
       },
       fontFamily: {
-        // BluestarAI Typography (from Brand Guidelines)
         sans: ['Montserrat', 'system-ui', 'sans-serif'], // Body Text
         display: ['Raleway', 'system-ui', 'sans-serif'], // Headlines
         heading: ['Raleway', 'system-ui', 'sans-serif'], // Sub Headlines
@@ -61,9 +57,7 @@ export default {
         },
       },
       backgroundImage: {
-        // BluestarAI Gradient 1: Dark Blue to Space Blue
         'gradient-1': 'linear-gradient(to bottom right, #0B1828, #3148B9)',
-        // BluestarAI Gradient 2: Orange to Space Blue  
         'gradient-2': 'linear-gradient(to bottom right, #F24C03, #3148B9)',
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'mesh-gradient': 'radial-gradient(at 40% 20%, rgba(49,72,185,0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(242,76,3,0.15) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(49,72,185,0.1) 0px, transparent 50%)',

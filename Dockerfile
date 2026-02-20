@@ -1,16 +1,12 @@
 
-FROM node:18-alpine AS deps
+FROM node:18-alpine AS builder
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat
 COPY package.json package-lock.json ./
 
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
-FROM node:18-alpine AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ARG VITE_APP_VERSION=latest
@@ -22,6 +18,7 @@ ENV VITE_BUILD_TIME=$VITE_BUILD_TIME
 ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
+
 FROM nginx:alpine AS runner
 
 RUN apk add --no-cache curl

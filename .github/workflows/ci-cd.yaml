@@ -1,36 +1,174 @@
-name: Deploy to S3
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
+      - develop
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '18'
+  AWS_REGION: 'us-east-2'
 
 jobs:
-  deploy:
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install Dependencies
-      run: npm ci
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-    - name: Build Project
-      run: npm run build
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
+      - name: Lint
+        run: npm run lint
 
-    - name: Deploy to S3
-      run: aws s3 sync ./dist s3://bluestaraileadgen-dev-test --delete
+      - name: Build
+        env:
+          VITE_APP_VERSION: ${{ github.sha }}
+          VITE_BUILD_TIME: ${{ github.event.head_commit.timestamp }}
+        run: npm run build
+
+      - name: Generate build info
+        run: |
+          cat > dist/build-info.json << EOF
+          {
+            "version": "${{ github.sha }}",
+            "shortVersion": "$(echo ${{ github.sha }} | cut -c1-7)",
+            "branch": "${{ github.ref_name }}",
+            "buildTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "buildNumber": "${{ github.run_number }}"
+          }
+          EOF
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 5
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy static assets to S3
+        run: |
+          aws s3 sync ./dist s3://bluestaraileadgen-staging \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html" \
+            --exclude "build-info.json" \
+            --exclude "*.html"
+
+      - name: Deploy HTML with no-cache
+        run: |
+          aws s3 cp ./dist/index.html s3://bluestaraileadgen-staging/index.html \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+      - name: Deploy build info
+        run: |
+          aws s3 cp ./dist/build-info.json s3://bluestaraileadgen-staging/build-info.json \
+            --cache-control "no-cache"
+
+      - name: Health check
+        run: |
+          sleep 5
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "http://bluestaraileadgen-staging.s3-website.us-east-2.amazonaws.com")
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Health check failed with status $HTTP_STATUS"
+            exit 1
+          fi
+          echo "Staging deployment healthy (HTTP $HTTP_STATUS)"
+
+  deploy-production:
+    name: Deploy to Production
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy static assets to S3
+        run: |
+          aws s3 sync ./dist s3://bluestaraileadgen-prod \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html" \
+            --exclude "build-info.json" \
+            --exclude "*.html"
+
+      - name: Deploy HTML with no-cache
+        run: |
+          aws s3 cp ./dist/index.html s3://bluestaraileadgen-prod/index.html \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+      - name: Deploy build info
+        run: |
+          aws s3 cp ./dist/build-info.json s3://bluestaraileadgen-prod/build-info.json \
+            --cache-control "no-cache"
+
+      - name: Invalidate CloudFront cache
+        if: vars.CLOUDFRONT_DISTRIBUTION_ID != ''
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+
+      - name: Health check
+        run: |
+          sleep 5
+          # Try CloudFront URL first, fall back to S3
+          if [ -n "${{ vars.CLOUDFRONT_DOMAIN }}" ]; then
+            URL="https://${{ vars.CLOUDFRONT_DOMAIN }}"
+          else
+            URL="http://bluestaraileadgen-prod.s3-website.us-east-2.amazonaws.com"
+          fi
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Health check failed with status $HTTP_STATUS"
+            exit 1
+          fi
+          echo "Production deployment healthy (HTTP $HTTP_STATUS)"

@@ -369,7 +369,7 @@ export const SequencesPage = ({ user }) => {
       
       {activeTab === 'sequences' && (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
             <Metric label="Total Enrolled" value={fmt.number(stats.enrolled)} icon={Users} />
             <Metric label="Active" value={fmt.number(stats.active)} icon={Activity} />
             <Metric label="Completed" value={fmt.number(stats.completed)} icon={CheckCircle2} />

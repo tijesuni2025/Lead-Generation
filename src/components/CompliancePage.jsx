@@ -194,7 +194,7 @@ export const CompliancePage = ({ user }) => {
       </Card>
       
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
         <Metric label="DNC Entries" value={fmt.number(dncEntries.length)} icon={Phone} />
         <Metric label="Suppressions" value={fmt.number(stats.suppressionCount)} icon={Mail} />
         <Metric label="Consent Records" value={fmt.number(consentRecords.length)} icon={CheckCircle2} />

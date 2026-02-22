@@ -36,7 +36,7 @@ export const Dashboard = ({ user }) => {
         {/* Hero banner */}
         <img src="/Frame_48095743.svg" alt="Dashboard" style={{ width: '100%', height: 'auto', borderRadius: 20, display: 'block' }} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
           <Metric label="Total Clients" value={stats.clients} icon={Users} iconColor={c.primary[100]} />
           <Metric label="Total Leads" value={fmt.number(stats.leads)} icon={Target} iconColor={c.success.muted} />
           <Metric label="Active Leads" value={fmt.number(stats.active)} icon={Activity} change="+12%" trend="up" />
